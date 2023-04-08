@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Code Viewer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    form {
+      margin: 20px auto;
+      width: 50%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 20px;
+      overflow: auto;
+      max-height: 500px;
+      resize: both;
+
+      /* existing styles */
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .download-btn {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .download-btn:hover {
+      background-color: #2E8B57;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Code Viewer</h1>
+  <form>
+    <label for="code">Paste your code here:</label>
+    <textarea id="code" name="code" rows="10"></textarea>
+    <label for="file">Or select a file to upload:</label>
+    <input type="file" name="file" id="file"><br>
+    <button type="button" onclick="displayCode()">View Code</button>
+
+    <button type="button" onclick="zoomIn()">Zoom In</button>
+    <button type="button" onclick="zoomOut()">Zoom Out</button>
+    <div id="code-content"></div>
+    <div id="code-buttons"></div>
+    <p><a href="Page2/PS1.html">Page 2</a></p>
+  </form>
+  <div id="code-content"></div>
+  <script>
+
+    function zoomIn() {
+      var pre = document.querySelector('#code-content pre');
+      var fontSize = window.getComputedStyle(pre).getPropertyValue('font-size');
+      fontSize = parseInt(fontSize) + 2 + 'px';
+      pre.style.fontSize = fontSize;
+    }
+
+    function zoomOut() {
+      var pre = document.querySelector('#code-content pre');
+      var fontSize = window.getComputedStyle(pre).getPropertyValue('font-size');
+      fontSize = parseInt(fontSize) - 2 + 'px';
+      pre.style.fontSize = fontSize;
+    }
+
+    function displayCode() {
+      var codeInput = document.querySelector('#code');
+      var code = codeInput.value;
+      var fileType = 'text/plain';
+      var pre = document.createElement('pre');
+      pre.textContent = code;
+      if (code.includes('public class')) {
+        fileType = 'text/x-java';
+        pre.classList.add('java-code');
+      } else if (code.includes('int main(')) {
+        fileType = 'text/x-c++src';
+        pre.classList.add('c-code');
+      }
+      var fileInput = document.querySelector('#file');
+      if (fileInput.files.length > 0) {
+        var file = fileInput.files[0];
+        fileType = file.type;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var fileContent = e.target.result;
+          pre.textContent = fileContent;
+          if (fileType === 'text/plain') {
+            pre.classList.add('plain-text');
+          } else if (fileType === 'text/x-c++src' || fileType === 'text/x-csrc') {
+            pre.classList.add('c-code');
+          } else if (fileType === 'text/x-java') {
+            pre.classList.add('java-code');
+          }
+          var codeContentDiv = document.querySelector('#code-content');
+          codeContentDiv.textContent = '';
+          codeContentDiv.appendChild(pre);
+          addDownloadButton(fileInput.files[0].name, pre.textContent);
+        }
+        reader.readAsText(file);
+      } else {
+        var codeContentDiv = document.querySelector('#code-content');
+        codeContentDiv.textContent = '';
+        codeContentDiv.appendChild(pre);
+        addDownloadButton('code.txt', pre.textContent);
+      }
+    }
+
+    function addDownloadButton(filename, code) {
+      var downloadBtn = document.createElement('a');
+      downloadBtn.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(code);
+      downloadBtn.download = filename;
+      downloadBtn.textContent = 'Download Code';
+      downloadBtn.classList.add('download-btn');
+      var codeContentDiv = document.querySelector('#code-content');
+      codeContentDiv.appendChild(downloadBtn);
+    }
+    function addDownloadButton(filename, code) {
+      var downloadBtn = document.createElement('a');
+      downloadBtn.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(code);
+      downloadBtn.download = filename;
+      downloadBtn.textContent = 'Download Code';
+      downloadBtn.classList.add('download-btn');
+      var codeButtonsDiv = document.querySelector('#code-buttons');
+      codeButtonsDiv.appendChild(downloadBtn);
+    }
+  </script>
+</body>
+
+</html>
