@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fetch</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .containerb {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .center-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .center {
+      position: absolute;
+      top: auto;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 class="text-center" style="margin-top: 30px; margin-bottom: 20px;">Stored Data</h1>
+  <div class="container">
+    <table class="table  table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Title</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody id="courses-table-body">
+      </tbody>
+    </table>
+  </div>
+  <!-- ------------------------------------- -->
+  <div class="container">
+    <div>
+      <h1 style="margin-top: 50px; margin-bottom: 90px;">
+        <center>Upload Data Here</center>
+      </h1>
+    </div>
+
+    <form id="form"></form>
+    <table class="table center table-bordered" style="width: 80%;">
+      <thead class="table-dark">
+        <tr style="text-align: center;">
+          <th scope="col">ID</th>
+          <th scope="col">Title</th>
+          <th scope="col">Description</th>
+      </thead>
+
+      </tr>
+      <tr>
+        <td><input id="id-input" name="id" type="text"></td>
+        <td><input id="title-input" name="title" type="text"></td>
+        <td><input id="description-input" name="description" type="text"></td>
+        <!-- <td></td> -->
+      </tr>
+      <tr>
+       
+        <td><button id="upload-button" >Save Data</button></td>
+      </tr>
+      <tbody id="courses-table-body">
+      </tbody>
+    </table>
+    </form>
+  </div>
+
+
+  <div class="container">
+    <div>
+      <h1 style="margin-top: 220px; margin-bottom: 90px;">
+        <center>Delete Data</center>
+      </h1>
+    </div>
+
+    <form id="form"></form>
+    <table class="table center table-bordered" >
+      <thead class="table-dark">
+        <tr style="text-align: center;">
+          <td>ID</th>
+            <td><input id="id-delete" name="id" type="text"></td>
+            <td><button id="delete-button" >Delete Data</button></td>
+      </thead>
+      </tr> 
+      <tr><td></td></tr>
+      <tbody id="courses-table-body">
+      </tbody>
+    </table>
+    </form>
+  </div>
+
+  <script>
+    const coursesTableBody = document.querySelector("#courses-table-body");
+
+    fetch("http://localhost:9090/courses")
+      .then(response => response.json())
+      .then(courses => {
+        courses.forEach(course => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+              <th scope="row">${course.id}</th>
+              <td>${course.title}</td>
+              <td>${course.description}</td>
+             `;
+          coursesTableBody.appendChild(row);
+        });
+      })
+      .catch(error => console.error(error));
+      
+      // upload data
+    const uploadButton = document.getElementById("upload-button");
+    uploadButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      const form = document.getElementById("form");
+      const formData = new FormData(form);
+      const url = "http://localhost:9090/courses";
+      const yourData = {
+        id: document.getElementById("id-input").value,
+        title: document.getElementById("title-input").value,
+        description: document.getElementById("description-input").value
+      };
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(yourData)
+      };
+
+      fetch(url, options)
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+        location.reload();
+    });
+
+    // delete data
+
+    const deleteButton = document.getElementById("delete-button");
+    deleteButton.addEventListener("click", function(event) {
+      event.preventDefault();
+    
+      const idToDelete = document.getElementById("id-delete").value;
+      const url = `http://localhost:9090/courses/${idToDelete}`;
+    
+      const options = {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+    
+      fetch(url, options)
+        .then(response => {
+          if(response.ok) {
+            alert(`Data with ID ${idToDelete} has been successfully deleted.`);
+            location.reload();
+          } else {
+            alert(`Unable to delete data with ID ${idToDelete}. Please try again.`);
+          }
+        })
+        .catch(error => console.error(error));
+    });
+    
+
+
+  </script>
+</body>
+
+</html>
