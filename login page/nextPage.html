@@ -1,0 +1,252 @@
+<html>
+<body>
+
+<style>
+.parent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.h2{
+    display: flex;
+    justify-content: left;
+    align-items: left;
+color:blue;
+}
+
+.h3{
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    margin-top: 5%;
+    margin-left: 18%;
+color:darkgreen;
+font-weight: 500;
+font-size: 150%;
+}
+
+.p{
+    font: 15px verdana, helvetica, arial, sans-serif;
+    line-height: 23px;
+    width: 80%;
+    margin-left: 18%;
+    height:70%;
+   
+    margin-bottom: 10%;
+    padding: 10px
+}
+.program{
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    margin-left: 10px;
+    border-radius: 5%;
+    border-color: black;
+}
+
+.java {
+    white-space: pre;
+    background-color: #f3ebeb;
+    font: 15px verdana, helvetica, arial, sans-serif;
+    line-height: 23px;
+    width: 80%;
+    margin-left: 18%;
+    height:70%;
+    margin-top: 80px;
+    margin-bottom: 1%;
+    padding: 10px;
+}
+
+</style>
+
+
+    <div class="parent">
+<h1>Heading</h1>
+    </div>
+
+    <div class="h2" >
+        <h2>Program for save Value in database using JS and php</h2>
+    </div>
+
+<div class="program" >
+
+  <pre>&lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    
+    &lt;head&gt;
+      &lt;title&gt;Save Data without Page Reload&lt;/title&gt;
+      &lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"&gt;&lt;/script&gt;
+      &lt;script&gt;
+        function saveData() {
+          var name = $("#name").val();
+          $.ajax({
+            url: "save.php",
+            type: "POST",
+            data: { name: name },
+            success: function (response) {
+              $("#result").html(response);
+            }
+          });
+          return false;
+        }
+      &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+      &lt;input type="text" id="name" placeholder="Enter your name"&gt;
+      &lt;button onclick="return saveData();"&gt;Save&lt;/button&gt;
+      &lt;div id="result"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+    
+    &lt;/html&gt;
+    
+    &lt;script&gt;
+    
+      function saveData() {
+        var name = document.getElementById("name").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // Response from server
+            console.log(this.responseText);
+          }
+        };
+        xhttp.open("POST", "save.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("name=" + name);
+      }
+    &lt;/script&gt;
+    PHP code (save.php):
+    
+    php
+    
+    &lt;?php
+    // Connect to MySQL database
+    $servername = "localhost";
+    $username = "username";
+    $password = "password";
+    $dbname = "database_name";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    // Check connection
+    if ($conn-&gt;connect_error) {
+      die("Connection failed: " . $conn-&gt;connect_error);
+    }
+    
+    // Get data from AJAX request
+    $name = $_POST['name'];
+    
+    // Save data to database
+    $sql = "INSERT INTO mytable (name) VALUES ('$name')";
+    if ($conn-&gt;query($sql) === TRUE) {
+      echo "Data saved successfully";
+    } else {
+      echo "Error: " . $sql . "&lt;br&gt;" . $conn-&gt;error;
+    }
+    
+    // Close database connection
+    $conn-&gt;close();
+    ?&gt;
+    
+   </pre>
+   
+
+</div>
+
+<div >
+<textarea name="code" class="java"><!DOCTYPE html>
+    <html>
+    
+    <head>
+      <title>Save Data without Page Reload</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script>
+        function saveData() {
+          var name = $("#name").val();
+          $.ajax({
+            url: "save.php",
+            type: "POST",
+            data: { name: name },
+            success: function (response) {
+              $("#result").html(response);
+            }
+          });
+          return false;
+        }
+      </script>
+    </head>
+    
+    <body>
+      <input type="text" id="name" placeholder="Enter your name">
+      <button onclick="return saveData();">Save</button>
+      <div id="result"></div>
+    </body>
+    
+    </html>
+    
+    <script>
+    
+      function saveData() {
+        var name = document.getElementById("name").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // Response from server
+            console.log(this.responseText);
+          }
+        };
+        xhttp.open("POST", "save.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("name=" + name);
+      }
+    </script>
+    PHP code (save.php):
+    
+    php
+    
+    <?php
+    // Connect to MySQL database
+    $servername = "localhost";
+    $username = "username";
+    $password = "password";
+    $dbname = "database_name";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    // Check connection
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
+    
+    // Get data from AJAX request
+    $name = $_POST['name'];
+    
+    // Save data to database
+    $sql = "INSERT INTO mytable (name) VALUES ('$name')";
+    if ($conn->query($sql) === TRUE) {
+      echo "Data saved successfully";
+    } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    // Close database connection
+    $conn->close();
+    ?>
+    
+    In this PHP code, we have established a connection to the MySQL database, retrieved the data from the AJAX request, and
+    saved it to the database. We have also included error handling and closed the database connection.
+    
+    Note that you will need to replace the database credentials (i.e., $servername, $username, $password, and $dbname) with
+    your own values. Also, make sure that the table name (mytable in this example) and column names match your
+    database schema.
+</textarea>
+<h3 class="h3">Note:</h3>
+<p class="p"> In this PHP code, we have established a connection to the MySQL database, retrieved the data from the AJAX request, and
+    saved it to the database. We have also included error handling and closed the database connection.
+    
+    Note that you will need to replace the database credentials (i.e., $servername, $username, $password, and $dbname) with
+    your own values. Also, make sure that the table name (mytable in this example) and column names match your
+    database schema.</p>
+
+</div>
+</body>
+</html>
